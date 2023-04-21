@@ -1,0 +1,17 @@
+# API keys and secrets
+.env
+.env.production
+.env.local
+
+# Dependency directory
+node_modules
+
+# Ignore built ts files
+
+# Ignore dist
+dist
+.vscode
+tmp
+/.yarn
+/files
+/private
