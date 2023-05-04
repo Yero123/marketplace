@@ -2,11 +2,15 @@ import { IsString, IsNumber, IsUrl, IsArray, IsNotEmpty } from "class-validator"
 import { Category } from "../models/Category";
 import { Product } from "../models/Product"
 
-export interface ICreateProductDto extends Omit<Product, 'id' | 'category'> {
-
+export interface ICreateProductDto extends Omit<Product, 'id' | 'category' | 'images'> {
+  category_id: number;
+  images:string;
 }
 
 export class CreateProductDto implements ICreateProductDto {
+  @IsNumber()
+  @IsNotEmpty()
+  category_id!: number;
   @IsString()
   @IsNotEmpty()
   title!: string;
@@ -16,10 +20,7 @@ export class CreateProductDto implements ICreateProductDto {
   @IsString()
   @IsNotEmpty()
   description!: string;
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  categoryId!: number;
-  @IsArray()
-  @IsString({ each: true }) 
-  images!: string[];
+  images!: string;
 }

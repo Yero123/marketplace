@@ -1,13 +1,32 @@
+import { PrismaClient } from "@prisma/client";
 import { Category } from "../models/Category";
+import BaseService from "./base.service";
+import { ICreateCategoryDto } from "../schemas/category.schema";
 
-class CategoryService {
-  private categories: Category[] = [
-    { id: 1, name: 'Category 1' },
-    { id: 2, name: 'Category 2' },
-    { id: 3, name: 'Category 3' },
-  ];
-  getCategories() {
-    return this.categories;
+class CategoryService extends BaseService {
+  private db: PrismaClient;
+
+  constructor() {
+    super();
+    this.db = CategoryService.db;
+  }
+
+  async get() {
+    return await this.db.category.findMany({
+      where: {
+        active: true
+      }
+    });
+  }
+  async getById(id: number) {
+    return await this.db.category.findUnique({
+      where: { id: id }
+    })
+  }
+  async create(category: ICreateCategoryDto) {
+    return await this.db.category.create({
+      data: category
+    })
   }
 }
 const categoryService = new CategoryService();

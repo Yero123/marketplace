@@ -7,19 +7,30 @@ import RequestValidator from "../middlewares/validateBody";
 
 const productsRouter = Router();
 
-productsRouter.get('/', (req, res) => {
-  const products = productService.getProducts();
-  res.send({ products });
+productsRouter.get('/', async (req, res, next) => {
+  try {
+    const products = await productService.getProducts();
+    res.status(200).send({
+      message: 'Products listed',
+      data: products
+    });
+  } catch {
+    next('Error getting products');
+  }
+
 });
 
-productsRouter.post('/', RequestValidator.validate(CreateProductDto), (req, res,next) => {
+productsRouter.post('/', RequestValidator.validate(CreateProductDto), async (req, res, next) => {
   try {
     const product = req.body as CreateProductDto;
-    const result = productService.addProduct(product);
-    res.send({ result });
+    const result = await productService.create(product);
+    res.status(200).send({
+      message: 'Product created',
+      data: result
+    });
   }
-  catch(e){
-    next(e)
+  catch (e) {
+    next('Error creating product');
   }
 
 });

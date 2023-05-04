@@ -1,20 +1,27 @@
+import { PrismaClient } from "@prisma/client";
 import { productData } from "../constants";
 import { Product } from "../models/Product";
 import { ICreateProductDto } from "../schemas/product.schema";
+import BaseService from "./base.service";
 
-class ProductService {
-  private products: Product[] = productData
+class ProductService extends BaseService {
+  private db: PrismaClient;
 
-  getProducts() {
-    return this.products;
+  constructor() {
+    super();
+    this.db = ProductService.db;
   }
-  addProduct(product: ICreateProductDto) {
-    const newProduct = {
-      id: this.products.length + 1,
-      ...product
-    }
-    this.products.push(newProduct);
-    return newProduct;
+  async create(product: ICreateProductDto) {
+    return await this.db.product.create({
+      data: product
+    })
+  }
+  async getProducts() {
+    return await this.db.product.findMany({
+      where: {
+        active: true
+      }
+    });
   }
 }
 const productService = new ProductService();
